@@ -2,7 +2,7 @@ import 'package:endless_note/models/Note.dart';
 
 class DayNotes{
   final DateTime date;
-  final List<Note> notes;
+  final Map<int,Note> notes;
 
   const DayNotes({
     required this.date,
@@ -11,7 +11,7 @@ class DayNotes{
 
   DayNotes copyWith({
     DateTime? date,
-    List<Note>? notes,
+    Map<int,Note>? notes,
   }) {
     return DayNotes(
       date: date ?? this.date,

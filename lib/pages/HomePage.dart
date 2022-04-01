@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
       body: ListView.builder(
           itemBuilder: (ctx, i) => DayCard(
               dayNotes: DayNotes(
-                  notes: [],
+                  notes: {},
                   date: today.subtract(Duration(days: i * 1))))),
     );
   }
