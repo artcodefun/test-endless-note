@@ -11,10 +11,9 @@ class DayCard extends StatelessWidget {
 
   Color randColor(Random r) {
     Color c;
-    do{
-    c = Color.fromARGB(
-        255, r.nextInt(256), r.nextInt(256), r.nextInt(256));}
-    while(c.computeLuminance()<0.5);
+    do {
+      c = Color.fromARGB(255, r.nextInt(256), r.nextInt(256), r.nextInt(256));
+    } while (c.computeLuminance() < 0.5);
 
     return c;
   }
@@ -25,9 +24,11 @@ class DayCard extends StatelessWidget {
     var r = Random(dayNotes.date.millisecondsSinceEpoch);
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/patterns/${r.nextInt(18) + 1}.png"),
-              repeat: ImageRepeat.repeat),
+          image: dayNotes.notes.isEmpty
+              ? null
+              : DecorationImage(
+                  image: AssetImage("assets/patterns/${r.nextInt(18) + 1}.png"),
+                  repeat: ImageRepeat.repeat),
           boxShadow: [
             BoxShadow(
                 color: Colors.black.withOpacity(0.3),
@@ -35,7 +36,7 @@ class DayCard extends StatelessWidget {
                 blurRadius: 10)
           ],
           borderRadius: BorderRadius.circular(25),
-          color: randColor(r)),
+          color: dayNotes.notes.isEmpty ? theme.colorScheme.surface : randColor(r)),
       margin: const EdgeInsets.all(10),
       height: 200,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
