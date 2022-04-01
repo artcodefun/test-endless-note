@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.endless.note">
+    package="test.endless.note">
    <application
         android:label="Endless Note"
         android:name="${applicationName}"

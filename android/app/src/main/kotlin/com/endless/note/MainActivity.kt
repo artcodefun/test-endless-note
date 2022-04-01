@@ -1,4 +1,4 @@
-package com.endless.note
+package test.endless.note
 
 import io.flutter.embedding.android.FlutterActivity
 
