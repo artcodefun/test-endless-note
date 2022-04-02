@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (ctx) => BlocProvider<DayNotesCubit>.value(
                               child: const NotesPage(),
-                                value: blocCtx.read())));
+                                value: blocCtx.read()..refreshDay())));
                       },
                       child: DayCard(dayNotes: state.dayNotes!))
                       : Shimmer.fromColors(

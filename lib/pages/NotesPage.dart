@@ -1,4 +1,7 @@
 import 'package:endless_note/bloc/DayNotesCubit.dart';
+import 'package:endless_note/bloc/DayNotesState.dart';
+import 'package:endless_note/components/NoteItem.dart';
+import 'package:endless_note/components/NotesList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +11,8 @@ class NotesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    DayNotesCubit dnc = context.watch();
+    DayNotesStateStatus dncStatus = context.select((DayNotesCubit dnc) => dnc.state.status);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -16,7 +20,10 @@ class NotesPage extends StatelessWidget {
         title: Stack(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: const Image(
                 repeat: ImageRepeat.repeat,
                 alignment: Alignment.center,
@@ -27,24 +34,31 @@ class NotesPage extends StatelessWidget {
             ),
             Positioned.fill(
                 child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    color: Colors.transparent,
-                    padding: const EdgeInsets.all(10),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: theme.colorScheme.surface,
-                      size: 30,
-                    ),
-                  ),
-                )
-              ],
-            ))
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        DayNotesCubit dnc = context.read();
+                        dnc.sendDayUpdates();
+                        Navigator.of(context).pop();},
+                      child: Container(
+                        color: Colors.transparent,
+                        padding: const EdgeInsets.all(10),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: theme.colorScheme.surface,
+                          size: 30,
+                        ),
+                      ),
+                    )
+                  ],
+                ))
           ],
         ),
       ),
+      body:
+      dncStatus != DayNotesStateStatus.active ?
+      const Center(child: CircularProgressIndicator()) :
+      const NotesList()
     );
   }
 }
