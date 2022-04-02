@@ -53,6 +53,8 @@ class _NotesListState extends State<NotesList> {
                             .notes[getKeyByIndex(dnc.state.dayNotes!, index)] ??
                         const Note(text: ""),
                     onDelete: () => listLock(() async {
+
+
                           _listKey.currentState?.removeItem(
                               index,
                               (context, animation) => SlideTransition(
@@ -73,8 +75,10 @@ class _NotesListState extends State<NotesList> {
                                   ),
                               duration: actionDuration);
 
+                          await Future.delayed(actionDuration);
                           await dnc.deleteNote(
                               getKeyByIndex(dnc.state.dayNotes!, index));
+
                         }),
                     onEdited: (s) async {
                       await dnc.editNote(
