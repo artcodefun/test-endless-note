@@ -32,7 +32,7 @@ class DayNotesCubit extends Cubit<DayNotesState> {
 
   deleteNote(int noteId) async {
     var newDN = state.dayNotes!.copyWith(makeNewMap: true)..notes.remove(noteId);
-    await _dnh.updateDN(newDN);
+    // await _dnh.updateDN(newDN);
     emit(state.copyWith(dayNotes: newDN));
   }
 
