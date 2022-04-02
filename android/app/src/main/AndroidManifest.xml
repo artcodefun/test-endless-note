@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="test.endless.note">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
         android:label="Endless Note"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
