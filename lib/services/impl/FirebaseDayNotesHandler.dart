@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 class FirebaseDayNotesHandler implements DayNotesHandler {
   static const notesPath = "notes";
   static const monthPath = "month";
-  static const daysPath = "days";
 
   late CollectionReference notes;
 
@@ -25,13 +24,14 @@ class FirebaseDayNotesHandler implements DayNotesHandler {
     }
 
     List<DayNotes> month = [];
-    var days = (m.get(daysPath) as Map).cast<String, Map>();
+    var days = (m.data() as Map).cast<String, Map>();
 
     for (var d in days.keys) {
       month.add(DayNotes(
           date: DateTime(date.year, date.month, int.parse(d)),
-          notes: days[d]?.cast<String, String>().map((key, value) =>
-              MapEntry(int.parse(key), Note(text: value))) ??
+          notes: days[d]?.cast<String, Map>().map((key, value) => MapEntry(
+                  int.parse(key),
+                  Note.fromMap(value.cast<String, dynamic>()))) ??
               {}));
     }
 
@@ -41,30 +41,34 @@ class FirebaseDayNotesHandler implements DayNotesHandler {
   bool sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  @override
-  Future deleteDN(DateTime day) {
-    // TODO: implement deleteDN
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<DayNotes> editDN(DateTime day) {
-    // TODO: implement editDN
-    throw UnimplementedError();
-  }
+  String fullMonthPath(DateTime d) => "${d.year}/$monthPath/${d.month}";
 
   @override
   Future<DayNotes> getDN(DateTime day) async {
     if (!loadedMonths.containsKey(monthId(day))) {
       await loadMonth(day);
     }
-    return loadedMonths[monthId(day)]!.firstWhere((d) =>sameDay(d.date, day), orElse: ()=>DayNotes(date: day, notes: {}));
-
+    return loadedMonths[monthId(day)]!.firstWhere((d) => sameDay(d.date, day),
+        orElse: () => DayNotes(date: day, notes: {}));
   }
 
   @override
   Future init() async {
     await Firebase.initializeApp();
     notes = FirebaseFirestore.instance.collection(notesPath);
+  }
+
+  @override
+  Future updateDN(DayNotes dayNotes) async {
+    await notes.doc(fullMonthPath(dayNotes.date)).set({
+      "${dayNotes.date.day}":
+          dayNotes.notes.map((key, value) => MapEntry("$key", value.toMap()))
+    }, SetOptions(mergeFields: ["${dayNotes.date.day}"]));
+    await loadMonth(dayNotes.date);
+  }
+
+  @override
+  Future refreshDN(DateTime day) async{
+    await loadMonth(day);
   }
 }
